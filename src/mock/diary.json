@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "title": "Fun Times with Friends",
+    "image": "friends.png",
+    "tag": 3
+  },
+  {
+    "id": "2",
+    "title": "Did absolutely Nothing!",
+    "tag": 1
+  },
+  {
+    "id": "3",
+    "title": "Got appreciated at Work today",
+    "tag": 2
+  }
+]
