@@ -1,29 +1,19 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-export default class HeaderMessage extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.viewContainer}>
-          <View style={styles.textContainer}>
-            <Text style={styles.dateText}>Today, 10 May 2020</Text>
-            <Text style={styles.infoText}>How was your day, Today?</Text>
-          </View>
-          <View>
-            <Text>
-              <MaterialCommunityIcons
-                name="dots-vertical"
-                size={24}
-                color="white"
-              />
-            </Text>
-          </View>
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { timeToDateToday } from "../../utils/date";
+
+const HeaderMessage = ({ onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.container}>
+      <View style={styles.viewContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.dateText}>{timeToDateToday()}</Text>
+          <Text style={styles.infoText}>How was your day, Today?</Text>
         </View>
       </View>
-    );
-  }
-}
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -52,10 +42,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
-
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5,
-  },
 });
+
+export default HeaderMessage;

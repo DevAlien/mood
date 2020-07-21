@@ -33,6 +33,7 @@ export default class FullWidthImage extends Component {
       if (typeof source !== "string") {
         source = this.props.source.uri;
       }
+      console.log(this.props);
       Image.getSize(source, (width, height) => {
         this.setState({
           width: containerWidth,

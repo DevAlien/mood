@@ -1,25 +1,62 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import FullWidthImage from "./FullWidthImage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Popover from "react-native-popover-view";
+import { timeToDate } from "../../utils/date";
+import FullWidthImage from "./FullWidthImage";
+import TagText from "./TagText";
 
-const EntryItem = ({ image, title }) => {
-  console.log("image", image);
+const EntryItem = ({ image, title, content, tags, _metadata: { created } }) => {
   return (
     <View style={styles.container}>
       <View style={styles.viewContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.dateText}>Today, 10 May 2018</Text>
+          <Text style={styles.dateText}>{timeToDate(created)}</Text>
           <Text style={styles.infoText}>{title}</Text>
         </View>
         <View>
-          <Text>
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color="#A5A5A5"
-            />
-          </Text>
+          <Popover
+            backgroundStyle={{ backgroundColor: "transparent" }}
+            popoverStyle={{
+              backgroundColor: "rgb(245, 245, 245)",
+            }}
+            verticalOffset={
+              Platform.OS === "android" ? -StatusBar.currentHeight : 0
+            }
+            from={(sourceRef, showPopover) => (
+              <TouchableOpacity
+                onPress={showPopover}
+                style={{ padding: 5, marginTop: -5 }}
+              >
+                <MaterialCommunityIcons
+                  ref={sourceRef}
+                  name="dots-vertical"
+                  size={24}
+                  color="#A5A5A5"
+                />
+              </TouchableOpacity>
+            )}
+          >
+            <View>
+              <TouchableOpacity
+                style={{ paddingHorizontal: 20, paddingVertical: 10 }}
+              >
+                <Text style={{ fontSize: 16 }}>Special</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ paddingHorizontal: 20, paddingVertical: 10 }}
+              >
+                <Text style={{ color: "red", fontSize: 16 }}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </Popover>
         </View>
       </View>
       {image && (
@@ -27,17 +64,20 @@ const EntryItem = ({ image, title }) => {
           <FullWidthImage
             style={styles.image}
             resizeMode={"contain"}
-            source={require("../../../assets/friends.png")}
+            source={{ uri: image }}
           />
         </View>
       )}
       <View style={styles.postContainer}>
-        <Text style={styles.postText}>
-          Nam porttitor blandit accumsan. Ut vel dictum sem, a pretium dui. In
-          malesuada enim in dolor euismod, id commodo mi consectetur.
-        </Text>
+        <Text style={styles.postText}>{content}</Text>
       </View>
-      <Text style={styles.tagText}>{"\u2022"} Happy</Text>
+      {tags && tags.length > 0 && (
+        <View style={styles.tags}>
+          {tags.map((t) => (
+            <TagText key={t} name={t} />
+          ))}
+        </View>
+      )}
     </View>
   );
 };
@@ -84,17 +124,15 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     paddingHorizontal: 10,
+    paddingBottom: 10,
   },
   postText: {
     color: "#232324",
     fontFamily: "Manrope3",
     fontSize: 13,
   },
-  tagText: {
-    padding: 10,
-    color: "#157DE6",
-    fontFamily: "Manrope3-Semibold",
-    fontSize: 14,
+  tags: {
+    flexDirection: "row",
   },
 });
 

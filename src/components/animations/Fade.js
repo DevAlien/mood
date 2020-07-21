@@ -1,58 +1,49 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Animated } from "react-native";
 
-export default class Fade extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: props.visible,
-    };
-    this._visibility = new Animated.Value(this.props.visible ? 1 : 0);
-  }
+export default function Fade({
+  visible = false,
+  duration,
+  style,
+  children,
+  ...rest
+}) {
+  const [stateVisible, setStateVisible] = useState(visible);
+  const visibility = useRef(new Animated.Value(visible ? 1 : 0)).current;
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.visible) {
-      this.setState({ visible: true });
+  useEffect(() => {
+    if (visible === false) {
+      Animated.timing(visibility, {
+        useNativeDriver: true,
+        toValue: visible ? 1 : 0,
+        duration: duration || 3000,
+      }).start(() => {
+        setStateVisible(visible);
+      });
+    } else {
+      setStateVisible(visible);
+      Animated.timing(visibility, {
+        useNativeDriver: true,
+        toValue: visible ? 1 : 0,
+        duration: duration || 3000,
+      }).start();
     }
+  }, [visible]);
 
-    if (nextProps.visible === false) {
-      return setTimeout(() => {
-        Animated.timing(this._visibility, {
-          toValue: nextProps.visible ? 1 : 0,
-          duration: this.props.duration || 300,
-        }).start(() => {
-          this.setState({ visible: nextProps.visible });
-        });
-      }, 300);
-    }
+  const containerStyle = {
+    opacity: visibility.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+    }),
+  };
 
-    Animated.timing(this._visibility, {
-      toValue: nextProps.visible ? 1 : 0,
-      duration: this.props.duration || 300,
-    }).start(() => {
-      this.setState({ visible: nextProps.visible });
-    });
-  }
-
-  render() {
-    const { visible, style, children, ...rest } = this.props;
-
-    const containerStyle = {
-      opacity: this._visibility.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-      }),
-    };
-
-    const combinedStyle = [containerStyle, style];
-    return (
-      <Animated.View
-        useNativeDriver
-        style={this.state.visible ? combinedStyle : containerStyle}
-        {...rest}
-      >
-        {this.state.visible ? children : null}
-      </Animated.View>
-    );
-  }
+  const combinedStyle = [containerStyle, style];
+  return (
+    <Animated.View
+      style={stateVisible ? combinedStyle : containerStyle}
+      {...rest}
+    >
+      {stateVisible ? children : null}
+    </Animated.View>
+  );
 }

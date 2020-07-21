@@ -12,10 +12,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 10,
     paddingHorizontal: 15,
-    // paddingTop: 16,
-    // paddingBottom: 16,
     backgroundColor: "rgba(21, 125, 230, 0.1)",
-
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "flex-start",

@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export default ({ onPress, title }) => (
-  <TouchableOpacity style={styles.fullWidthButton} onPress={onPress}>
+export default ({ onPress, title, style = {} }) => (
+  <TouchableOpacity style={[styles.fullWidthButton, style]} onPress={onPress}>
     <Text style={styles.fullWidthButtonText}>{title}</Text>
   </TouchableOpacity>
 );
@@ -13,8 +13,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 10,
     borderRadius: 10,
-    // paddingTop: 16,
-    // paddingBottom: 16,
     backgroundColor: "#157DE6",
     shadowColor: "rgba(0, 0, 0, 0.3)",
     shadowOpacity: 0.8,
